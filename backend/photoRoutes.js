@@ -3,6 +3,23 @@ const { Photo } = require('./models'); // Import the Photo model
 
 const router = express.Router();
 
+const multer = require('multer');
+const path = require('path');
+
+// Set up storage engine
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads'); // Directory where files will be saved
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+
+// Initialize multer with storage configuration
+const upload = multer({ storage });
+
+
 // Create a new photo
 router.post('/photos', async (req, res) => {
     try {
@@ -68,5 +85,19 @@ router.delete('/photos/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete photo' });
     }
 });
+
+
+// Upload a photo
+router.post('/photos/upload', upload.single('photo'), async (req, res) => {
+    try {
+        const { title, description } = req.body;
+        const imageURL = `http://localhost:5001/uploads/${req.file.filename}`;
+        const newPhoto = await Photo.create({ title, description, imageURL });
+        res.status(201).json(newPhoto);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to upload photo' });
+    }
+});
+
 
 module.exports = router;
