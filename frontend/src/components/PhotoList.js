@@ -6,6 +6,7 @@ const PhotoList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Fetch photos on component mount
     useEffect(() => {
         const fetchPhotos = async () => {
             try {
@@ -21,6 +22,21 @@ const PhotoList = () => {
         fetchPhotos();
     }, []);
 
+    // Delete photo with confirmation
+    const handleDelete = async (id) => {
+        const confirmed = window.confirm('Are you sure you want to delete this photo?');
+        if (!confirmed) return;
+
+        try {
+            await axiosInstance.delete(`/photos/${id}`);
+            setPhotos(photos.filter(photo => photo.id !== id)); // Update state to reflect deletion
+            alert('Photo deleted successfully!');
+        } catch (err) {
+            console.error('Failed to delete photo:', err);
+            alert('Failed to delete photo.');
+        }
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
@@ -33,6 +49,7 @@ const PhotoList = () => {
                         <h2>{photo.title}</h2>
                         <p>{photo.description}</p>
                         <img src={photo.imageURL} alt={photo.title} width="200" />
+                        <button onClick={() => handleDelete(photo.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
@@ -41,3 +58,4 @@ const PhotoList = () => {
 };
 
 export default PhotoList;
+

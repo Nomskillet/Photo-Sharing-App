@@ -76,15 +76,28 @@ router.delete('/photos/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const photo = await Photo.findByPk(id);
+
         if (!photo) {
             return res.status(404).json({ error: 'Photo not found' });
         }
+
+        // Remove the file from the uploads folder
+        const fs = require('fs');
+        const filePath = path.join(__dirname, 'uploads', path.basename(photo.imageURL));
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        // Delete the photo from the database
         await photo.destroy();
         res.status(204).send();
     } catch (error) {
+        console.error('Error deleting photo:', error);
         res.status(500).json({ error: 'Failed to delete photo' });
     }
 });
+
 
 
 // Upload a photo
