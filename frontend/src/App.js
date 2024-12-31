@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PhotoList from './components/PhotoList';
 import PhotoUploadForm from './components/PhotoUploadForm';
 
 const App = () => {
     const [photos, setPhotos] = useState([]);
 
-    // Fetch photos from the server
     const fetchPhotos = async () => {
         try {
             const response = await fetch('http://localhost:5001/api/photos');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
             const data = await response.json();
             setPhotos(data);
         } catch (error) {
@@ -19,20 +15,20 @@ const App = () => {
         }
     };
 
-    // Fetch photos when the component mounts
-    useEffect(() => {
+    React.useEffect(() => {
         fetchPhotos();
     }, []);
 
     return (
-        <div>
-            <h1>Photo Sharing App</h1>
-            {/* Pass the fetchPhotos function as a callback to refresh the photo list */}
-            <PhotoUploadForm onUploadSuccess={fetchPhotos} />
-            {/* Pass the photos array to the PhotoList component */}
-            <PhotoList photos={photos} />
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="container mx-auto p-4 bg-white shadow-lg rounded">
+                <h1 className="text-3xl font-bold text-center mb-6">Photo Sharing App</h1>
+                <PhotoUploadForm onUploadSuccess={fetchPhotos} />
+                <PhotoList photos={photos} />
+            </div>
         </div>
     );
 };
 
 export default App;
+

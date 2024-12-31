@@ -14,22 +14,16 @@ const PhotoUploadForm = ({ onUploadSuccess }) => {
         formData.append('photo', photo);
 
         try {
-            // Upload photo to backend
             await axios.post('/photos/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
             alert('Photo uploaded successfully!');
-            setTitle(''); // Clear the form fields
+            setTitle('');
             setDescription('');
             setPhoto(null);
-
-            // Call the onUploadSuccess callback to fetch the updated photo list
-            if (onUploadSuccess) {
-                onUploadSuccess();
-            }
+            onUploadSuccess();
         } catch (error) {
             console.error('Error uploading photo:', error);
             alert('Failed to upload photo.');
@@ -37,38 +31,52 @@ const PhotoUploadForm = ({ onUploadSuccess }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="title">Title:</label>
+        <form onSubmit={handleSubmit} className="mb-6">
+            <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                    Title:
+                </label>
                 <input
                     type="text"
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
             </div>
-            <div>
-                <label htmlFor="description">Description:</label>
+            <div className="mb-4">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    Description:
+                </label>
                 <input
                     type="text"
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
             </div>
-            <div>
-                <label htmlFor="photo">Photo:</label>
+            <div className="mb-4">
+                <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
+                    Photo:
+                </label>
                 <input
                     type="file"
                     id="photo"
                     accept="image/*"
                     onChange={(e) => setPhoto(e.target.files[0])}
                     required
+                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
             </div>
-            <button type="submit">Upload Photo</button>
+            <button
+                type="submit"
+                className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+                Upload Photo
+            </button>
         </form>
     );
 };
