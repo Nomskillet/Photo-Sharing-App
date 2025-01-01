@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
+import { toast } from 'react-toastify';
 
 const PhotoList = () => {
     const [photos, setPhotos] = useState([]);
@@ -22,14 +23,13 @@ const PhotoList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this photo?')) {
-            try {
-                await axiosInstance.delete(`/photos/${id}`);
-                setPhotos(photos.filter((photo) => photo.id !== id));
-                alert('Photo deleted successfully!');
-            } catch (error) {
-                alert('Failed to delete photo.');
-            }
+        try {
+            await axiosInstance.delete(`/photos/${id}`);
+            setPhotos(photos.filter((photo) => photo.id !== id));
+            toast.success('Photo deleted successfully!');
+        } catch (err) {
+            console.error('Error deleting photo:', err);
+            toast.error('Failed to delete photo.');
         }
     };
 
@@ -38,23 +38,16 @@ const PhotoList = () => {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold mb-4">Photo List</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <h1 className="text-xl font-bold mb-4">Photo List</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {photos.map((photo) => (
-                    <div
-                        key={photo.id}
-                        className="bg-white p-4 shadow rounded-md flex flex-col items-center"
-                    >
-                        <img
-                            src={photo.imageURL}
-                            alt={photo.title}
-                            className="w-full h-auto rounded mb-4"
-                        />
-                        <h3 className="text-lg font-semibold">{photo.title}</h3>
-                        <p className="text-gray-600 text-sm mb-4">{photo.description}</p>
+                    <div key={photo.id} className="p-4 border rounded shadow-sm">
+                        <img src={photo.imageURL} alt={photo.title} className="w-full h-auto mb-2" />
+                        <h2 className="text-lg font-semibold">{photo.title}</h2>
+                        <p className="text-sm text-gray-500">{photo.description}</p>
                         <button
                             onClick={() => handleDelete(photo.id)}
-                            className="px-4 py-2 bg-red-500 text-white font-semibold rounded shadow hover:bg-red-600"
+                            className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                         >
                             Delete
                         </button>

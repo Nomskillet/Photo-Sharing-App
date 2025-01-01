@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PhotoList from './components/PhotoList';
 import PhotoUploadForm from './components/PhotoUploadForm';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => {
     const [photos, setPhotos] = useState([]);
@@ -25,6 +28,7 @@ const App = () => {
                 <h1 className="text-3xl font-bold text-center mb-6">Photo Sharing App</h1>
                 <PhotoUploadForm onUploadSuccess={fetchPhotos} />
                 <PhotoList photos={photos} />
+                <ToastContainer />
             </div>
         </div>
     );

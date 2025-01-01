@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosInstance';
+import { toast } from 'react-toastify';
 
 const PhotoUploadForm = ({ onUploadSuccess }) => {
     const [title, setTitle] = useState('');
@@ -19,14 +20,14 @@ const PhotoUploadForm = ({ onUploadSuccess }) => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            alert('Photo uploaded successfully!');
+            toast.success('Photo uploaded successfully!'); // Toast notification
             setTitle('');
             setDescription('');
             setPhoto(null);
-            onUploadSuccess();
+            onUploadSuccess(); // Trigger the fetchPhotos function
         } catch (error) {
             console.error('Error uploading photo:', error);
-            alert('Failed to upload photo.');
+            toast.error('Failed to upload photo.'); // Toast notification
         }
     };
 
