@@ -15,19 +15,21 @@ const PhotoUploadForm = ({ onUploadSuccess }) => {
         formData.append('photo', photo);
 
         try {
-            await axios.post('/photos/upload', formData, {
+            const response = await axios.post('/photos/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            toast.success('Photo uploaded successfully!'); // Toast notification
+            const newPhoto = response.data;
+            console.log('Uploaded photo response:', newPhoto); // Debugging line
+            toast.success('Photo uploaded successfully!');
             setTitle('');
             setDescription('');
             setPhoto(null);
-            onUploadSuccess(); // Trigger the fetchPhotos function
+            onUploadSuccess(newPhoto);
         } catch (error) {
             console.error('Error uploading photo:', error);
-            toast.error('Failed to upload photo.'); // Toast notification
+            toast.error('Failed to upload photo.');
         }
     };
 

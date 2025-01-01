@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PhotoList from './components/PhotoList';
 import PhotoUploadForm from './components/PhotoUploadForm';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const App = () => {
     const [photos, setPhotos] = useState([]);
@@ -13,13 +12,14 @@ const App = () => {
             const response = await fetch('http://localhost:5001/api/photos');
             const data = await response.json();
             setPhotos(data);
+            console.log('Fetched photos:', data); // Debugging log
         } catch (error) {
             console.error('Error fetching photos:', error);
         }
     };
 
-    React.useEffect(() => {
-        fetchPhotos();
+    useEffect(() => {
+        fetchPhotos(); // Fetch photos on initial render
     }, []);
 
     return (
@@ -27,7 +27,8 @@ const App = () => {
             <div className="container mx-auto p-4 bg-white shadow-lg rounded">
                 <h1 className="text-3xl font-bold text-center mb-6">Photo Sharing App</h1>
                 <PhotoUploadForm onUploadSuccess={fetchPhotos} />
-                <PhotoList photos={photos} />
+                {/* Pass photos and setPhotos as props */}
+                <PhotoList photos={photos} setPhotos={setPhotos} />
                 <ToastContainer />
             </div>
         </div>
@@ -35,4 +36,5 @@ const App = () => {
 };
 
 export default App;
+
 

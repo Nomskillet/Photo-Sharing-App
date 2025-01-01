@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { toast } from 'react-toastify';
 
-const PhotoList = () => {
-    const [photos, setPhotos] = useState([]);
+const PhotoList = ({ photos, setPhotos }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -11,21 +10,26 @@ const PhotoList = () => {
         const fetchPhotos = async () => {
             try {
                 const response = await axiosInstance.get('/photos');
-                setPhotos(response.data);
+                setPhotos(response.data); // Update the parent state
                 setLoading(false);
+                console.log('Fetched photos:', response.data); // Debugging log
             } catch (err) {
                 setError('Failed to fetch photos');
                 setLoading(false);
+                console.error('Error fetching photos:', err); // Debugging log
             }
         };
 
         fetchPhotos();
-    }, []);
+    }, [setPhotos]);
 
     const handleDelete = async (id) => {
         try {
             await axiosInstance.delete(`/photos/${id}`);
-            setPhotos(photos.filter((photo) => photo.id !== id));
+            const updatedPhotos = photos.filter((photo) => photo.id !== id);
+            setPhotos(updatedPhotos); // Update the parent state
+            console.log('Deleted photo ID:', id); // Debugging log
+            console.log('Updated photos after delete:', updatedPhotos); // Debugging log
             toast.success('Photo deleted successfully!');
         } catch (err) {
             console.error('Error deleting photo:', err);
