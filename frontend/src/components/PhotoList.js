@@ -2,34 +2,42 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { toast } from 'react-toastify';
 
-const PhotoList = ({ photos, setPhotos }) => {
+const PhotoList = ({ token, photos, setPhotos }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchPhotos = async () => {
             try {
-                const response = await axiosInstance.get('/photos');
-                setPhotos(response.data); // Update the parent state
+                const response = await axiosInstance.get('/photos', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setPhotos(response.data);
                 setLoading(false);
-                console.log('Fetched photos:', response.data); // Debugging log
+                console.log('Fetched photos:', response.data);
             } catch (err) {
                 setError('Failed to fetch photos');
                 setLoading(false);
-                console.error('Error fetching photos:', err); // Debugging log
+                console.error('Error fetching photos:', err);
             }
         };
 
         fetchPhotos();
-    }, [setPhotos]);
+    }, [token, setPhotos]);
 
     const handleDelete = async (id) => {
         try {
-            await axiosInstance.delete(`/photos/${id}`);
+            await axiosInstance.delete(`/photos/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const updatedPhotos = photos.filter((photo) => photo.id !== id);
-            setPhotos(updatedPhotos); // Update the parent state
-            console.log('Deleted photo ID:', id); // Debugging log
-            console.log('Updated photos after delete:', updatedPhotos); // Debugging log
+            setPhotos(updatedPhotos);
+            console.log('Deleted photo ID:', id);
+            console.log('Updated photos after delete:', updatedPhotos);
             toast.success('Photo deleted successfully!');
         } catch (err) {
             console.error('Error deleting photo:', err);
@@ -63,5 +71,3 @@ const PhotoList = ({ photos, setPhotos }) => {
 };
 
 export default PhotoList;
-
-

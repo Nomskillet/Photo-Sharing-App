@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from '../api/axiosInstance';
 import { toast } from 'react-toastify';
 
-const PhotoUploadForm = ({ onUploadSuccess }) => {
+const PhotoUploadForm = ({ token, onUploadSuccess }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState(null);
@@ -18,10 +18,11 @@ const PhotoUploadForm = ({ onUploadSuccess }) => {
             const response = await axios.post('/photos/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
                 },
             });
             const newPhoto = response.data;
-            console.log('Uploaded photo response:', newPhoto); // Debugging line
+            console.log('Uploaded photo response:', newPhoto);
             toast.success('Photo uploaded successfully!');
             setTitle('');
             setDescription('');
