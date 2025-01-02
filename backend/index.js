@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const photoRoutes = require('./photoRoutes'); // Import the routes
+const authRoutes = require('./authRoutes'); // Import the new auth routes
 
 dotenv.config(); // Load environment variables
 
@@ -14,6 +15,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api', photoRoutes);
+app.use('/api/auth', authRoutes); // New auth routes
+
 
 // Root route
 app.get('/', (req, res) => {
