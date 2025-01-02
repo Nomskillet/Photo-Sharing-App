@@ -1,5 +1,6 @@
 const express = require('express');
 const { Photo } = require('./models'); // Import the Photo model
+const authenticateToken = require('./authMiddleware'); // Import authentication middleware
 
 const router = express.Router();
 
@@ -19,6 +20,8 @@ const storage = multer.diskStorage({
 // Initialize multer with storage configuration
 const upload = multer({ storage });
 
+// Apply authentication middleware to all routes
+router.use(authenticateToken);
 
 // Create a new photo
 router.post('/photos', async (req, res) => {
@@ -98,8 +101,6 @@ router.delete('/photos/:id', async (req, res) => {
     }
 });
 
-
-
 // Upload a photo
 router.post('/photos/upload', upload.single('photo'), async (req, res) => {
     try {
@@ -111,6 +112,5 @@ router.post('/photos/upload', upload.single('photo'), async (req, res) => {
         res.status(500).json({ error: 'Failed to upload photo' });
     }
 });
-
 
 module.exports = router;
