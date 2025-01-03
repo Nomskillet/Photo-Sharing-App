@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
         const photos = await Photo.findAll();
         const photosWithUrls = photos.map((photo) => ({
             ...photo.toJSON(),
-            imageURL: `${req.protocol}://${req.get('host')}/uploads/${path.basename(photo.imageURL)}`,
+            imageURL: `${req.protocol}s://${req.get('host')}/uploads/${path.basename(photo.imageURL)}`,
         }));
         res.status(200).json(photosWithUrls);
     } catch (error) {
@@ -37,7 +37,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch photos' });
     }
 });
-
 
 // Create a new photo
 router.post('/', async (req, res) => {
@@ -112,7 +111,7 @@ router.delete('/:id', async (req, res) => {
 router.post('/upload', upload.single('photo'), async (req, res) => {
     try {
         const { title, description } = req.body;
-        const imageURL = `http://localhost:5001/uploads/${req.file.filename}`;
+        const imageURL = `${req.protocol}s://${req.get('host')}/uploads/${req.file.filename}`;
         const newPhoto = await Photo.create({ title, description, imageURL });
         res.status(201).json(newPhoto);
     } catch (error) {
