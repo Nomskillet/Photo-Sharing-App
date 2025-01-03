@@ -5,6 +5,11 @@
     "database": "photo_sharing_app",
     "host": "127.0.0.1",
     "dialect": "mysql"
+  },
+  "production": {
+    "url": "DATABASE_URL",
+    "dialect": "postgres"
   }
 }
+
 

@@ -10,9 +10,14 @@ const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
+if (config.url) {
+    // Use the URL field for production environments
+    sequelize = new Sequelize(config.url, { dialect: config.dialect });
+} else if (config.use_env_variable) {
+    // Use environment variable if defined
     sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
+    // Default to the local configuration
     sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
