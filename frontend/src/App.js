@@ -43,7 +43,12 @@ const App = () => {
                 Logout
               </button>
             </div>
-            <PhotoUploadForm token={token} onUploadSuccess={() => {}} />
+            <PhotoUploadForm
+              token={token}
+              onUploadSuccess={(newPhoto) => {
+                setPhotos((prevPhotos) => [newPhoto, ...prevPhotos]);
+              }}
+            />
             <PhotoList token={token} photos={photos} setPhotos={setPhotos} />
           </>
         ) : isRegistering ? (
