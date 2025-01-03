@@ -36,8 +36,6 @@ const PhotoList = ({ token, photos, setPhotos }) => {
             });
             const updatedPhotos = photos.filter((photo) => photo.id !== id);
             setPhotos(updatedPhotos);
-            console.log('Deleted photo ID:', id);
-            console.log('Updated photos after delete:', updatedPhotos);
             toast.success('Photo deleted successfully!');
         } catch (err) {
             console.error('Error deleting photo:', err);
@@ -71,3 +69,4 @@ const PhotoList = ({ token, photos, setPhotos }) => {
 };
 
 export default PhotoList;
+

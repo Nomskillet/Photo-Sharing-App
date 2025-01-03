@@ -23,16 +23,21 @@ const upload = multer({ storage });
 // Apply authentication middleware to all routes
 router.use(authenticateToken);
 
-// Get all photos
+// Get all photos with full URLs
 router.get('/', async (req, res) => {
     try {
         const photos = await Photo.findAll();
-        res.status(200).json(photos);
+        const photosWithUrls = photos.map((photo) => ({
+            ...photo.toJSON(),
+            imageURL: `${req.protocol}://${req.get('host')}/uploads/${path.basename(photo.imageURL)}`,
+        }));
+        res.status(200).json(photosWithUrls);
     } catch (error) {
         console.error('Error fetching photos:', error);
         res.status(500).json({ error: 'Failed to fetch photos' });
     }
 });
+
 
 // Create a new photo
 router.post('/', async (req, res) => {
