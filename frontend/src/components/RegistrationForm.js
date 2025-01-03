@@ -12,7 +12,7 @@ const RegistrationForm = ({ onRegisterSuccess }) => {
         setLoading(true);
 
         try {
-            const response = await axios.post('/auth/register', { username, password });
+            await axios.post('/auth/register', { username, password }); // Removed 'response' variable
             toast.success('Registration successful! You can now log in.');
             onRegisterSuccess();
         } catch (error) {
@@ -60,5 +60,3 @@ const RegistrationForm = ({ onRegisterSuccess }) => {
 };
 
 export default RegistrationForm;
-
-
